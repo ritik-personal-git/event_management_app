@@ -26,7 +26,7 @@ const API_URL = import.meta.env.VITE_API_URL;
       setLoading(true);
 
       const { data } = await axios.get(
-        `http://localhost:5000/api/events?search=${searchTerm}`
+        `${API_URL}/api/events?search=${searchTerm}`
       );
 
       setEvents(data.data);
