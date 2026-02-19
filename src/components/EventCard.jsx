@@ -3,6 +3,20 @@ import { FaCalendar, FaMapMarkerAlt, FaUsers, FaTicketAlt } from 'react-icons/fa
 import { format } from 'date-fns';
 
 const EventCard = ({ event, onRegister, isRegistering }) => {
+  const isCompleted = event.status === 'completed';
+  const isFull =
+    (event.registeredUsers?.length || 0) >= event.capacity;
+
+  const isDisabled =
+    isCompleted || isFull || isRegistering;
+
+  const getButtonText = () => {
+    if (isCompleted) return 'Event Completed';
+    if (isFull) return 'Event Full';
+    if (isRegistering) return 'Registering...';
+    return 'Register';
+  };
+
   return (
     <motion.div
       whileHover={{ y: -10 }}
@@ -14,6 +28,19 @@ const EventCard = ({ event, onRegister, isRegistering }) => {
           alt={event.title}
           className="w-full h-full object-cover"
         />
+
+        {/* Status Badge */}
+        <div className="absolute top-3 right-3">
+          <span
+            className={`px-3 py-1 rounded-full text-xs font-semibold ${
+              isCompleted
+                ? 'bg-red-600 text-white'
+                : 'bg-green-600 text-white'
+            }`}
+          >
+            {isCompleted ? 'Completed' : 'Upcoming'}
+          </span>
+        </div>
       </div>
 
       <div className="p-6 text-white">
@@ -53,15 +80,15 @@ const EventCard = ({ event, onRegister, isRegistering }) => {
           </div>
 
           <button
-            disabled={isRegistering}
+            disabled={isDisabled}
             onClick={() => onRegister(event._id)}
             className={`px-6 py-2 rounded-lg font-semibold transition-all duration-200 ${
-              isRegistering
+              isDisabled
                 ? 'bg-gray-500 cursor-not-allowed'
                 : 'bg-gradient-to-r from-primary-600 to-accent-600 hover:scale-105'
             }`}
           >
-            {isRegistering ? 'Registering...' : 'Register'}
+            {getButtonText()}
           </button>
         </div>
       </div>

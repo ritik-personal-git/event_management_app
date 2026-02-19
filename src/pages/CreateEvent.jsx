@@ -39,35 +39,43 @@ const CreateEvent = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
+    const selectedDate = new Date(formData.date);
+  
+    if (selectedDate < new Date()) {
+      toast.error('Cannot create event in the past');
+      return;
+    }
+  
     try {
       const res = await fetch(`${API_URL}/api/events`, {
         method: 'POST',
-        credentials:"include",
+        credentials: "include",
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           ...formData,
-          date: new Date(formData.date),
+          date: selectedDate,
           capacity: Number(formData.capacity),
           price: Number(formData.price),
         }),
       });
-
+  
       const data = await res.json();
-
+  
       if (!res.ok) {
         throw new Error(data.error || 'Failed to create event');
       }
-
+  
       toast.success('Event created successfully!');
       navigate('/events');
     } catch (err) {
       toast.error(err.message);
     }
   };
+  
 
   return (
     <div className="min-h-screen pt-24 pb-20 px-4 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
@@ -132,13 +140,15 @@ const CreateEvent = () => {
 
           {/* Date & Time */}
           <input
-            type="date"
-            name="date"
-            required
-            value={formData.date}
-            onChange={handleChange}
-            className="w-full p-3 rounded-lg bg-white/20 text-white"
-          />
+  type="date"
+  name="date"
+  required
+  min={new Date().toISOString().split('T')[0]}
+  value={formData.date}
+  onChange={handleChange}
+  className="w-full p-3 rounded-lg bg-white/20 text-white"
+/>
+
 
           <input
             type="time"

@@ -191,11 +191,16 @@ const ManageEvents = () => {
                         Registrations
                       </th>
                       <th className="py-4 px-4 text-left text-gray-300">
+  Status
+</th>
+                      <th className="py-4 px-4 text-left text-gray-300">
                         Revenue
                       </th>
                       <th className="py-4 px-4 text-left text-gray-300">
                         Actions
                       </th>
+                     
+
                     </tr>
                   </thead>
 
@@ -224,6 +229,20 @@ const ManageEvents = () => {
                         <td className="py-4 px-4 text-gray-300">
                           {event.registeredUsers?.length || 0}
                         </td>
+                        
+                        <td className="py-4 px-4">
+  <span
+    className={`px-3 py-1 rounded-full text-xs font-semibold ${
+      event.status === 'completed'
+        ? 'bg-red-600 text-white'
+        : 'bg-green-600 text-white'
+    }`}
+  >
+    {event.status === 'completed'
+      ? 'Completed'
+      : 'Upcoming'}
+  </span>
+</td>
                         <td className="py-4 px-4 text-green-400 font-semibold">
                           ₹
                           {(

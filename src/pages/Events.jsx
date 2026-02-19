@@ -59,13 +59,20 @@ const API_URL = import.meta.env.VITE_API_URL;
         return;
       }
   
+      const selectedEvent = events.find(e => e._id === eventId);
+  
+      if (selectedEvent?.status === 'completed') {
+        toast.error('Registration closed. Event completed.');
+        return;
+      }
+  
       setRegisteringEventId(eventId);
   
       const res = await fetch(
         `${API_URL}/api/events/${eventId}/register`,
         {
           method: 'POST',
-          credentials: 'include', // 🔥 IMPORTANT (cookie auth)
+          credentials: 'include',
         }
       );
   
@@ -76,14 +83,14 @@ const API_URL = import.meta.env.VITE_API_URL;
       }
   
       toast.success('Successfully registered!');
-  
-      await fetchEvents(); // refresh events
+      await fetchEvents();
     } catch (error) {
       toast.error(error.message);
     } finally {
       setRegisteringEventId(null);
     }
   };
+  
   
   
 

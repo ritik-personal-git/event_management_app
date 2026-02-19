@@ -134,9 +134,18 @@ const MyRegistrations = () => {
                       <span className="text-gray-400">
                         Status:
                       </span>
-                      <span className="text-green-400 font-medium">
-                        {registration.status}
-                      </span>
+                      <span
+  className={`font-medium ${
+    registration.status === 'completed'
+      ? 'text-red-400'
+      : 'text-green-400'
+  }`}
+>
+  {registration.status === 'completed'
+    ? 'Completed'
+    : 'Upcoming'}
+</span>
+
                     </div>
 
                     <div className="flex justify-between text-sm">

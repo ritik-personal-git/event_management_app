@@ -92,10 +92,17 @@ const EditEvent = () => {
   // =========================
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
+    const selectedDate = new Date(formData.date);
+  
+    if (selectedDate < new Date()) {
+      toast.error('Cannot set event date in the past');
+      return;
+    }
+  
     try {
       setUpdating(true);
-
+  
       const res = await fetch(`${API_URL}/api/events/${id}`, {
         method: 'PATCH',
         headers: {
@@ -108,13 +115,13 @@ const EditEvent = () => {
           price: Number(formData.price),
         }),
       });
-
+  
       const data = await res.json();
-
+  
       if (!res.ok) {
         throw new Error(data.error || 'Update failed');
       }
-
+  
       toast.success('Event updated successfully');
       navigate('/manage-events');
     } catch (error) {
@@ -123,6 +130,7 @@ const EditEvent = () => {
       setUpdating(false);
     }
   };
+  
 
   if (authLoading || loading) {
     return (
