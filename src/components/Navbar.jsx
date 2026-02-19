@@ -68,7 +68,7 @@ const Navbar = () => {
               <FaCalendarAlt className="text-white text-2xl" />
             </div>
             <span className="text-2xl font-bold font-montserrat text-white">
-              Event<span className="text-primary-400">Hub</span>
+              Mithi<span className="text-primary-400">Verse</span>
             </span>
           </Link>
 

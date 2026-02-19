@@ -13,7 +13,7 @@ const Footer = () => {
                 <FaCalendarAlt className="text-white text-2xl" />
               </div>
               <span className="text-2xl font-bold font-montserrat">
-                Event<span className="text-primary-400">Hub</span>
+                Mithi<span className="text-primary-400">Verse</span>
               </span>
             </div>
             <p className="text-gray-400 text-sm">
@@ -79,7 +79,7 @@ const Footer = () => {
 
         <div className="border-t border-gray-700 mt-8 pt-8 text-center">
           <p className="text-gray-400 text-sm">
-            &copy; {new Date().getFullYear()} EventHub. All rights reserved.
+            &copy; {new Date().getFullYear()} MithiVerse. All rights reserved.
           </p>
         </div>
       </div>

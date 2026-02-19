@@ -86,7 +86,7 @@ const Register = () => {
               <FaUser className="text-white text-3xl" />
             </div>
             <h2 className="text-3xl font-bold text-white font-montserrat">
-              Join EventHub
+              Join MithiVerse
             </h2>
             <p className="text-gray-300 mt-2">
               Create an account to get started
