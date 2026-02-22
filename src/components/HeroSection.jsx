@@ -9,7 +9,7 @@ const HeroSection = () => {
       <div
         className="absolute inset-0 parallax"
         style={{
-          backgroundImage: 'url(https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=2070)',
+          backgroundImage: 'url(https://www.darden.virginia.edu/sites/default/files/styles/full_width_4_3_413px_fallback/public/2019-07/CI-Seminars-Hero.jpg?itok=5DL9v0is)',
           filter: 'brightness(0.4)',
         }}
       />

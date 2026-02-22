@@ -30,7 +30,6 @@ const Promotion = () => {
     const fetchEvents = async () => {
       try {
         const response = await axios.get(`${API_URL}/api/events`);
-        console.log("response->>",response);
         const data=response?.data?.data || [];
         setEvents(data);
 
