@@ -25,6 +25,21 @@ const EditEvent = () => {
   });
 
   // =========================
+  // Theme Colors
+  // =========================
+  const colors = {
+    bgDark: '#121212',
+    cardDark: '#1E1E2F',
+    cardLight: '#2A2A3D',
+    primaryGradient: 'linear-gradient(135deg, #00BFA6, #1DE9B6)',
+    secondaryGradient: 'linear-gradient(135deg, #1E1E2F, #2A2A3D)',
+    textWhite: '#FFFFFF',
+    textMuted: '#A0A0A0',
+    inputBg: 'rgba(30,30,47,0.5)',
+    disabledBtn: '#555555'
+  };
+
+  // =========================
   // Protect Route (Admin Only)
   // =========================
   useEffect(() => {
@@ -48,18 +63,14 @@ const EditEvent = () => {
 
         const data = await res.json();
 
-        if (!res.ok) {
-          throw new Error(data.error || 'Failed to fetch event');
-        }
+        if (!res.ok) throw new Error(data.error || 'Failed to fetch event');
 
         const event = data.data;
 
         setFormData({
           title: event.title || '',
           description: event.description || '',
-          date: event.date
-            ? event.date.substring(0, 10)
-            : '',
+          date: event.date ? event.date.substring(0, 10) : '',
           venue: event.venue || '',
           capacity: event.capacity || '',
           price: event.price || 0,
@@ -73,41 +84,27 @@ const EditEvent = () => {
         setLoading(false);
       }
     };
-
     fetchEvent();
   }, [id, API_URL, navigate]);
 
-  // =========================
-  // Handle Input Change
-  // =========================
   const handleChange = (e) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  // =========================
-  // Handle Update
-  // =========================
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
     const selectedDate = new Date(formData.date);
-  
+
     if (selectedDate < new Date()) {
       toast.error('Cannot set event date in the past');
       return;
     }
-  
+
     try {
       setUpdating(true);
-  
       const res = await fetch(`${API_URL}/api/events/${id}`, {
         method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify({
           ...formData,
@@ -115,13 +112,10 @@ const EditEvent = () => {
           price: Number(formData.price),
         }),
       });
-  
+
       const data = await res.json();
-  
-      if (!res.ok) {
-        throw new Error(data.error || 'Update failed');
-      }
-  
+      if (!res.ok) throw new Error(data.error || 'Update failed');
+
       toast.success('Event updated successfully');
       navigate('/manage-events');
     } catch (error) {
@@ -130,106 +124,88 @@ const EditEvent = () => {
       setUpdating(false);
     }
   };
-  
 
   if (authLoading || loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-white">
+      <div
+        className="min-h-screen flex items-center justify-center"
+        style={{ color: colors.textWhite, background: colors.bgDark }}
+      >
         Loading...
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen pt-24 pb-20 px-4 sm:px-6 lg:px-8">
+    <div
+      className="min-h-screen pt-24 pb-20 px-4 sm:px-6 lg:px-8"
+      style={{ background: colors.bgDark }}
+    >
       <div className="max-w-3xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-10"
-        >
-          <h1 className="text-5xl font-bold text-white mb-4">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-10">
+          <h1 style={{ color: colors.textWhite, fontSize: '2.5rem', fontWeight: 700, marginBottom: '0.5rem' }}>
             Edit Event
           </h1>
-          <p className="text-gray-300">
-            Update event details below
-          </p>
+          <p style={{ color: colors.textMuted }}>Update event details below</p>
         </motion.div>
 
         <motion.form
           onSubmit={handleSubmit}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="glass rounded-2xl p-8 space-y-6"
+          style={{
+            background: `linear-gradient(135deg, ${colors.cardDark}CC, ${colors.cardLight}80)`,
+            backdropFilter: 'blur(10px)',
+            WebkitBackdropFilter: 'blur(10px)',
+            borderRadius: '24px',
+            padding: '32px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '24px',
+          }}
         >
-          {/* Title */}
-          <InputField
-            label="Event Title"
-            name="title"
-            value={formData.title}
-            onChange={handleChange}
-          />
-
-          {/* Description */}
+          <InputField label="Event Title" name="title" value={formData.title} onChange={handleChange} colors={colors} />
+          
           <div>
-            <label className="block text-gray-300 mb-2">
-              Description
-            </label>
+            <label style={{ color: colors.textMuted, marginBottom: '0.5rem', display: 'block' }}>Description</label>
             <textarea
               name="description"
               value={formData.description}
               onChange={handleChange}
               rows="4"
               required
-              className="w-full bg-white/10 text-white p-3 rounded-lg focus:outline-none"
+              style={{
+                width: '100%',
+                background: colors.inputBg,
+                color: colors.textWhite,
+                padding: '12px 16px',
+                borderRadius: '12px',
+                border: 'none',
+                outline: 'none',
+              }}
             />
           </div>
 
-          {/* Date */}
-          <InputField
-            label="Date"
-            type="date"
-            name="date"
-            value={formData.date}
-            onChange={handleChange}
-          />
+          <InputField label="Date" type="date" name="date" value={formData.date} onChange={handleChange} colors={colors} />
+          <InputField label="Venue" name="venue" value={formData.venue} onChange={handleChange} colors={colors} />
+          <InputField label="Capacity" type="number" name="capacity" value={formData.capacity} onChange={handleChange} colors={colors} />
+          <InputField label="Price (₹)" type="number" name="price" value={formData.price} onChange={handleChange} colors={colors} />
 
-          {/* Venue */}
-          <InputField
-            label="Venue"
-            name="venue"
-            value={formData.venue}
-            onChange={handleChange}
-          />
-
-          {/* Capacity */}
-          <InputField
-            label="Capacity"
-            type="number"
-            name="capacity"
-            value={formData.capacity}
-            onChange={handleChange}
-          />
-
-          {/* Price */}
-          <InputField
-            label="Price (₹)"
-            type="number"
-            name="price"
-            value={formData.price}
-            onChange={handleChange}
-          />
-
-          {/* Category */}
           <div>
-            <label className="block text-gray-300 mb-2">
-              Category
-            </label>
+            <label style={{ color: colors.textMuted, marginBottom: '0.5rem', display: 'block' }}>Category</label>
             <select
               name="category"
               value={formData.category}
               onChange={handleChange}
-              className="w-full bg-white/10 text-white p-3 rounded-lg focus:outline-none"
+              style={{
+                width: '100%',
+                background: colors.inputBg,
+                color: colors.textWhite,
+                padding: '12px 16px',
+                borderRadius: '12px',
+                border: 'none',
+                outline: 'none',
+              }}
             >
               <option>Technical</option>
               <option>Cultural</option>
@@ -238,23 +214,22 @@ const EditEvent = () => {
             </select>
           </div>
 
-          {/* Image URL */}
-          <InputField
-            label="Image URL"
-            name="image"
-            value={formData.image}
-            onChange={handleChange}
-          />
+          <InputField label="Image URL" name="image" value={formData.image} onChange={handleChange} colors={colors} />
 
-          {/* Submit */}
           <button
             type="submit"
             disabled={updating}
-            className={`w-full py-3 rounded-lg font-semibold transition ${
-              updating
-                ? 'bg-gray-500 cursor-not-allowed'
-                : 'bg-gradient-to-r from-primary-600 to-accent-600 hover:scale-105'
-            }`}
+            style={{
+              width: '100%',
+              padding: '16px',
+              borderRadius: '16px',
+              fontWeight: 600,
+              color: colors.textWhite,
+              background: updating ? colors.disabledBtn : colors.primaryGradient,
+              border: 'none',
+              cursor: updating ? 'not-allowed' : 'pointer',
+              transition: 'all 0.3s',
+            }}
           >
             {updating ? 'Updating...' : 'Update Event'}
           </button>
@@ -265,24 +240,24 @@ const EditEvent = () => {
 };
 
 // Reusable Input Component
-const InputField = ({
-  label,
-  type = 'text',
-  name,
-  value,
-  onChange,
-}) => (
+const InputField = ({ label, type = 'text', name, value, onChange, colors }) => (
   <div>
-    <label className="block text-gray-300 mb-2">
-      {label}
-    </label>
+    <label style={{ color: colors.textMuted, marginBottom: '0.5rem', display: 'block' }}>{label}</label>
     <input
       type={type}
       name={name}
       value={value}
       onChange={onChange}
       required
-      className="w-full bg-white/10 text-white p-3 rounded-lg focus:outline-none"
+      style={{
+        width: '100%',
+        background: colors.inputBg,
+        color: colors.textWhite,
+        padding: '12px 16px',
+        borderRadius: '12px',
+        border: 'none',
+        outline: 'none',
+      }}
     />
   </div>
 );

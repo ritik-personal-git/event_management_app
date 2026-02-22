@@ -29,10 +29,15 @@ function App() {
     });
   }, []);
 
+  // Base theme colors
+  const colors = {
+    appBackground: '#121212', // very dark gray
+  };
+
   return (
     <AuthProvider>
       <Router>
-        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+        <div style={{ minHeight: '100vh', backgroundColor: colors.appBackground }}>
           <Navbar />
           <Toaster position="bottom-right" />
           <Routes>

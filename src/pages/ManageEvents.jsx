@@ -25,9 +25,26 @@ const ManageEvents = () => {
   const [loading, setLoading] = useState(true);
   const [expandedEvent, setExpandedEvent] = useState(null);
 
-  // =========================
-  // Protect Route (Admin Only)
-  // =========================
+  // ================= THEME COLORS =================
+  const colors = {
+    bgDark: '#121212',
+    cardGradient: 'linear-gradient(135deg, #1E1E2F 0%, #2A2A3D 100%)',
+    textWhite: '#FFFFFF',
+    textLight: '#E0E0E0',
+    textMuted: '#A0A0A0',
+    borderSoft: 'rgba(255,255,255,0.08)',
+    borderStrong: 'rgba(255,255,255,0.15)',
+
+    primaryGradient: 'linear-gradient(135deg, #00BFA6 0%, #1DE9B6 100%)',
+    primarySoft: 'rgba(0,191,166,0.15)',
+
+    info: '#2196F3',
+    success: '#4CAF50',
+    warning: '#FF9800',
+    error: '#F44336',
+  };
+
+  // ================= PROTECT ROUTE =================
   useEffect(() => {
     if (!authLoading) {
       if (!isAuthenticated || user?.role !== 'admin') {
@@ -37,23 +54,15 @@ const ManageEvents = () => {
     }
   }, [authLoading, isAuthenticated, user, navigate]);
 
-  // =========================
-  // Fetch All Events
-  // =========================
+  // ================= FETCH EVENTS =================
   const fetchEvents = async () => {
     try {
       setLoading(true);
-
       const res = await fetch(`${API_URL}/api/events`, {
         credentials: 'include',
       });
-
       const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || 'Failed to fetch events');
-      }
-
+      if (!res.ok) throw new Error(data.error || 'Failed to fetch events');
       setEvents(data.data);
     } catch (error) {
       toast.error(error.message);
@@ -66,25 +75,15 @@ const ManageEvents = () => {
     fetchEvents();
   }, []);
 
-  // =========================
-  // Delete Event
-  // =========================
   const handleDelete = async (eventId) => {
-    if (!window.confirm('Are you sure you want to delete this event?'))
-      return;
-
+    if (!window.confirm('Are you sure you want to delete this event?')) return;
     try {
       const res = await fetch(`${API_URL}/api/events/${eventId}`, {
         method: 'DELETE',
         credentials: 'include',
       });
-
       const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || 'Delete failed');
-      }
-
+      if (!res.ok) throw new Error(data.error || 'Delete failed');
       toast.success('Event deleted successfully');
       fetchEvents();
     } catch (error) {
@@ -92,27 +91,15 @@ const ManageEvents = () => {
     }
   };
 
-  // =========================
-  // Remove User Registration (ADMIN)
-  // =========================
   const handleRemoveUser = async (eventId, userId) => {
     if (!window.confirm('Remove this participant from event?')) return;
-
     try {
       const res = await fetch(
         `${API_URL}/api/events/${eventId}/unregister/${userId}`,
-        {
-          method: 'DELETE',
-          credentials: 'include',
-        }
+        { method: 'DELETE', credentials: 'include' }
       );
-
       const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || 'Failed to remove user');
-      }
-
+      if (!res.ok) throw new Error(data.error || 'Failed to remove user');
       toast.success('Participant removed');
       fetchEvents();
     } catch (error) {
@@ -120,16 +107,10 @@ const ManageEvents = () => {
     }
   };
 
-  // =========================
-  // Edit Event
-  // =========================
   const handleEdit = (eventId) => {
     navigate(`/edit-event/${eventId}`);
   };
 
-  // =========================
-  // Analytics
-  // =========================
   const totalRevenue = events.reduce(
     (sum, event) =>
       sum +
@@ -150,7 +131,10 @@ const ManageEvents = () => {
   if (authLoading) return null;
 
   return (
-    <div className="min-h-screen pt-24 pb-20 px-4 sm:px-6 lg:px-8">
+    <div
+      style={{ backgroundColor: colors.bgDark }}
+      className="min-h-screen pt-24 pb-20 px-4 sm:px-6 lg:px-8"
+    >
       <div className="max-w-7xl mx-auto">
 
         {/* Header */}
@@ -159,16 +143,16 @@ const ManageEvents = () => {
           animate={{ opacity: 1, y: 0 }}
           className="mb-12"
         >
-          <h1 className="text-5xl md:text-6xl font-bold text-white mb-4">
+          <h1 style={{ color: colors.textWhite }} className="text-5xl md:text-6xl font-bold mb-4">
             Manage Events
           </h1>
-          <p className="text-xl text-gray-300">
+          <p style={{ color: colors.textMuted }} className="text-xl">
             Track and manage all your events
           </p>
         </motion.div>
 
         {loading && (
-          <div className="text-center text-white py-20">
+          <div style={{ color: colors.textWhite }} className="text-center py-20">
             Loading events...
           </div>
         )}
@@ -177,42 +161,42 @@ const ManageEvents = () => {
           <>
             {/* Stats */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-              <StatCard icon={FaCalendarAlt} title="Total Events" value={events.length} />
-              <StatCard icon={FaUsers} title="Total Registrations" value={totalRegistrations} />
-              <StatCard icon={FaDollarSign} title="Total Revenue" value={`₹${totalRevenue.toLocaleString('en-IN')}`} />
-              <StatCard icon={FaChartLine} title="Avg. Attendance" value={avgAttendance} />
+              <StatCard icon={FaCalendarAlt} title="Total Events" value={events.length} colors={colors} />
+              <StatCard icon={FaUsers} title="Total Registrations" value={totalRegistrations} colors={colors} />
+              <StatCard icon={FaDollarSign} title="Total Revenue" value={`₹${totalRevenue.toLocaleString('en-IN')}`} colors={colors} />
+              <StatCard icon={FaChartLine} title="Avg. Attendance" value={avgAttendance} colors={colors} />
             </div>
 
             {/* Events Table */}
-            <div className="glass rounded-2xl p-6">
-              <h2 className="text-2xl font-bold text-white mb-6">
+            <div
+              style={{ background: colors.cardGradient }}
+              className="rounded-2xl p-6"
+            >
+              <h2 style={{ color: colors.textWhite }} className="text-2xl font-bold mb-6">
                 All Events
               </h2>
 
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
-                    <tr className="border-b border-white/20">
-                      <th className="py-4 px-4 text-left text-gray-300">Event</th>
-                      <th className="py-4 px-4 text-left text-gray-300">Date</th>
-                      <th className="py-4 px-4 text-left text-gray-300">Venue</th>
-                      <th className="py-4 px-4 text-left text-gray-300">Registrations</th>
-                      <th className="py-4 px-4 text-left text-gray-300">Status</th>
-                      <th className="py-4 px-4 text-left text-gray-300">Revenue</th>
-                      <th className="py-4 px-4 text-left text-gray-300">Actions</th>
+                    <tr style={{ borderBottom: `1px solid ${colors.borderStrong}` }}>
+                      {['Event','Date','Venue','Registrations','Status','Revenue','Actions'].map((h,i)=>(
+                        <th key={i} style={{ color: colors.textMuted }} className="py-4 px-4 text-left">
+                          {h}
+                        </th>
+                      ))}
                     </tr>
                   </thead>
 
                   <tbody>
                     {events.map((event) => (
                       <>
-                        {/* Main Row */}
                         <motion.tr
                           key={event._id}
-                          whileHover={{ backgroundColor: 'rgba(255,255,255,0.05)' }}
-                          className="border-b border-white/10"
+                          whileHover={{ backgroundColor: 'rgba(255,255,255,0.04)' }}
+                          style={{ borderBottom: `1px solid ${colors.borderSoft}` }}
                         >
-                          <td className="py-4 px-4 text-white">
+                          <td style={{ color: colors.textWhite }} className="py-4 px-4">
                             <button
                               onClick={() =>
                                 setExpandedEvent(
@@ -222,33 +206,34 @@ const ManageEvents = () => {
                               className="flex items-center space-x-2"
                             >
                               <span>{event.title}</span>
-                              {expandedEvent === event._id ? (
-                                <FaChevronUp size={12} />
-                              ) : (
-                                <FaChevronDown size={12} />
-                              )}
+                              {expandedEvent === event._id ? <FaChevronUp size={12}/> : <FaChevronDown size={12}/>}
                             </button>
                           </td>
 
-                          <td className="py-4 px-4 text-gray-300">
+                          <td style={{ color: colors.textLight }} className="py-4 px-4">
                             {format(new Date(event.date), 'PPP')}
                           </td>
 
-                          <td className="py-4 px-4 text-gray-300">
+                          <td style={{ color: colors.textLight }} className="py-4 px-4">
                             {event.venue}
                           </td>
 
-                          <td className="py-4 px-4 text-gray-300">
+                          <td style={{ color: colors.textLight }} className="py-4 px-4">
                             {event.registeredUsers?.length || 0}
                           </td>
 
                           <td className="py-4 px-4">
                             <span
-                              className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                                event.status === 'completed'
-                                  ? 'bg-red-600 text-white'
-                                  : 'bg-green-600 text-white'
-                              }`}
+                              style={{
+                                backgroundColor: event.status === 'completed'
+                                  ? colors.error
+                                  : colors.success,
+                                color: '#FFFFFF',
+                                padding: '6px 12px',
+                                borderRadius: '999px',
+                                fontSize: '12px',
+                                fontWeight: 600,
+                              }}
                             >
                               {event.status === 'completed'
                                 ? 'Completed'
@@ -256,9 +241,8 @@ const ManageEvents = () => {
                             </span>
                           </td>
 
-                          <td className="py-4 px-4 text-green-400 font-semibold">
-                            ₹
-                            {(
+                          <td style={{ color: colors.success, fontWeight: 600 }} className="py-4 px-4">
+                            ₹{(
                               (event.price || 0) *
                               (event.registeredUsers?.length || 0)
                             ).toLocaleString('en-IN')}
@@ -268,14 +252,24 @@ const ManageEvents = () => {
                             <div className="flex space-x-2">
                               <button
                                 onClick={() => handleEdit(event._id)}
-                                className="p-2 bg-blue-500/20 text-blue-400 rounded-lg hover:bg-blue-500/30"
+                                style={{
+                                  backgroundColor: colors.primarySoft,
+                                  color: '#00BFA6',
+                                  padding: '8px',
+                                  borderRadius: '8px',
+                                }}
                               >
                                 <FaEdit />
                               </button>
 
                               <button
                                 onClick={() => handleDelete(event._id)}
-                                className="p-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30"
+                                style={{
+                                  backgroundColor: 'rgba(244,67,54,0.15)',
+                                  color: colors.error,
+                                  padding: '8px',
+                                  borderRadius: '8px',
+                                }}
                               >
                                 <FaTrash />
                               </button>
@@ -283,7 +277,6 @@ const ManageEvents = () => {
                           </td>
                         </motion.tr>
 
-                        {/* Expandable Participants Section */}
                         <AnimatePresence>
                           {expandedEvent === event._id && (
                             <motion.tr
@@ -291,13 +284,13 @@ const ManageEvents = () => {
                               animate={{ opacity: 1, height: 'auto' }}
                               exit={{ opacity: 0, height: 0 }}
                             >
-                              <td colSpan="7" className="bg-white/5 p-6">
-                                <h3 className="text-white font-semibold mb-4">
+                              <td colSpan="7" style={{ backgroundColor: 'rgba(255,255,255,0.03)' }} className="p-6">
+                                <h3 style={{ color: colors.textWhite }} className="font-semibold mb-4">
                                   Participants
                                 </h3>
 
                                 {event.registeredUsers?.length === 0 ? (
-                                  <p className="text-gray-400">
+                                  <p style={{ color: colors.textMuted }}>
                                     No participants yet.
                                   </p>
                                 ) : (
@@ -305,13 +298,18 @@ const ManageEvents = () => {
                                     {event.registeredUsers.map((user) => (
                                       <div
                                         key={user._id}
-                                        className="flex justify-between items-center bg-white/10 p-3 rounded-lg"
+                                        style={{
+                                          backgroundColor: 'rgba(255,255,255,0.06)',
+                                          padding: '12px',
+                                          borderRadius: '12px',
+                                        }}
+                                        className="flex justify-between items-center"
                                       >
                                         <div>
-                                          <p className="text-white font-medium">
+                                          <p style={{ color: colors.textWhite, fontWeight: 500 }}>
                                             {user.name}
                                           </p>
-                                          <p className="text-gray-400 text-sm">
+                                          <p style={{ color: colors.textMuted, fontSize: '14px' }}>
                                             {user.email}
                                           </p>
                                         </div>
@@ -320,7 +318,15 @@ const ManageEvents = () => {
                                           onClick={() =>
                                             handleRemoveUser(event._id, user._id)
                                           }
-                                          className="flex items-center space-x-2 bg-red-500/20 text-red-400 px-3 py-2 rounded-lg hover:bg-red-500/30"
+                                          style={{
+                                            backgroundColor: 'rgba(244,67,54,0.15)',
+                                            color: colors.error,
+                                            padding: '8px 12px',
+                                            borderRadius: '8px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '6px',
+                                          }}
                                         >
                                           <FaUserMinus />
                                           <span>Remove</span>
@@ -339,7 +345,7 @@ const ManageEvents = () => {
                 </table>
 
                 {events.length === 0 && (
-                  <div className="text-center text-gray-400 py-12">
+                  <div style={{ color: colors.textMuted }} className="text-center py-12">
                     No events found
                   </div>
                 )}
@@ -352,15 +358,29 @@ const ManageEvents = () => {
   );
 };
 
-const StatCard = ({ icon: Icon, title, value }) => (
-  <div className="glass rounded-2xl p-6 text-white">
+const StatCard = ({ icon: Icon, title, value, colors }) => (
+  <div
+    style={{ background: colors.cardGradient }}
+    className="rounded-2xl p-6"
+  >
     <div className="flex items-center space-x-4">
-      <div className="p-3 bg-primary-600 rounded-lg">
+      <div
+        style={{
+          background: colors.primaryGradient,
+          padding: '12px',
+          borderRadius: '12px',
+          color: '#FFFFFF',
+        }}
+      >
         <Icon />
       </div>
       <div>
-        <p className="text-gray-300 text-sm">{title}</p>
-        <h3 className="text-2xl font-bold">{value}</h3>
+        <p style={{ color: colors.textMuted }} className="text-sm">
+          {title}
+        </p>
+        <h3 style={{ color: colors.textWhite }} className="text-2xl font-bold">
+          {value}
+        </h3>
       </div>
     </div>
   </div>

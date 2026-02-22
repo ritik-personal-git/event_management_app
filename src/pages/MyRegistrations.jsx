@@ -11,6 +11,22 @@ const MyRegistrations = () => {
   const [loading, setLoading] = useState(true);
   const [cancellingId, setCancellingId] = useState(null);
 
+  // ===== THEME COLORS =====
+  const colors = {
+    bgDark: "#121212",
+    cardGradient: "linear-gradient(135deg, #1E1E2F 0%, #2A2A3D 100%)",
+    textWhite: "#FFFFFF",
+    textLight: "#E0E0E0",
+    textMuted: "#A0A0A0",
+
+    primaryGradient: "linear-gradient(135deg, #00BFA6 0%, #1DE9B6 100%)",
+
+    info: "#2196F3",
+    success: "#4CAF50",
+    warning: "#FF9800",
+    error: "#F44336",
+  };
+
   // =========================
   // Fetch User Registrations
   // =========================
@@ -22,7 +38,6 @@ const MyRegistrations = () => {
         });
 
         const data = await res.json();
-
         if (!res.ok) {
           throw new Error(data.error || "Failed to fetch registrations");
         }
@@ -48,12 +63,11 @@ const MyRegistrations = () => {
       setCancellingId(id);
 
       const res = await fetch(`${API_URL}/api/events/${id}/unregister`, {
-        method:'DELETE',
-        credentials: 'include',
+        method: "DELETE",
+        credentials: "include",
       });
 
       const data = await res.json();
-
       if (!res.ok) {
         throw new Error(data.error || "Cancellation failed");
       }
@@ -72,30 +86,51 @@ const MyRegistrations = () => {
 
   if (authLoading || loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-white">
+      <div
+        style={{
+          minHeight: "100vh",
+          backgroundColor: colors.bgDark,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          color: colors.textWhite,
+        }}
+      >
         Loading...
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen pt-24 pb-20 px-4 sm:px-6 lg:px-8">
+    <div
+      style={{ backgroundColor: colors.bgDark }}
+      className="min-h-screen pt-24 pb-20 px-4 sm:px-6 lg:px-8"
+    >
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="mb-10"
         >
-          <h1 className="text-5xl font-bold text-white mb-4">
+          <h1
+            style={{ color: colors.textWhite }}
+            className="text-5xl font-bold mb-4"
+          >
             My Registrations
           </h1>
-          <p className="text-gray-300">
+          <p style={{ color: colors.textMuted }}>
             View and manage your event registrations
           </p>
         </motion.div>
 
         {registrations.length === 0 ? (
-          <div className="glass rounded-2xl p-10 text-center text-gray-300">
+          <div
+            style={{
+              background: colors.cardGradient,
+              color: colors.textLight,
+            }}
+            className="rounded-2xl p-10 text-center"
+          >
             You haven’t registered for any events yet.
           </div>
         ) : (
@@ -108,7 +143,10 @@ const MyRegistrations = () => {
                   key={registration._id}
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="glass rounded-2xl overflow-hidden"
+                  style={{
+                    background: colors.cardGradient,
+                  }}
+                  className="rounded-2xl overflow-hidden"
                 >
                   {/* Event Image */}
                   <img
@@ -118,61 +156,81 @@ const MyRegistrations = () => {
                   />
 
                   <div className="p-6 space-y-3">
-                    <h2 className="text-xl font-semibold text-white">
+                    <h2
+                      style={{ color: colors.textWhite }}
+                      className="text-xl font-semibold"
+                    >
                       {event.title}
                     </h2>
 
-                    <p className="text-gray-300 text-sm">
+                    <p style={{ color: colors.textLight }} className="text-sm">
                       📍 {event.venue}
                     </p>
 
-                    <p className="text-gray-300 text-sm">
+                    <p style={{ color: colors.textLight }} className="text-sm">
                       📅 {new Date(event.date).toLocaleDateString()}
                     </p>
 
+                    {/* Status */}
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-400">
+                      <span style={{ color: colors.textMuted }}>
                         Status:
                       </span>
                       <span
-  className={`font-medium ${
-    registration.status === 'completed'
-      ? 'text-red-400'
-      : 'text-green-400'
-  }`}
->
-  {registration.status === 'completed'
-    ? 'Completed'
-    : 'Upcoming'}
-</span>
-
+                        style={{
+                          color:
+                            registration.status === "completed"
+                              ? colors.error
+                              : colors.success,
+                          fontWeight: 500,
+                        }}
+                      >
+                        {registration.status === "completed"
+                          ? "Completed"
+                          : "Upcoming"}
+                      </span>
                     </div>
 
+                    {/* Payment */}
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-400">
+                      <span style={{ color: colors.textMuted }}>
                         Payment:
                       </span>
                       <span
-                        className={`font-medium ${
-                          registration.paymentStatus === "paid"
-                            ? "text-green-400"
-                            : "text-yellow-400"
-                        }`}
+                        style={{
+                          color:
+                            registration.paymentStatus === "paid"
+                              ? colors.success
+                              : colors.warning,
+                          fontWeight: 500,
+                        }}
                       >
                         {registration.paymentStatus}
                       </span>
                     </div>
 
+                    {/* Cancel Button */}
                     <button
-                      onClick={() =>
-                        handleCancel(registration._id)
-                      }
+                      onClick={() => handleCancel(registration._id)}
                       disabled={cancellingId === registration._id}
-                      className={`w-full mt-4 py-2 rounded-lg font-medium transition ${
-                        cancellingId === registration._id
-                          ? "bg-gray-500 cursor-not-allowed"
-                          : "bg-red-600 hover:bg-red-700"
-                      }`}
+                      style={{
+                        width: "100%",
+                        marginTop: "16px",
+                        padding: "10px",
+                        borderRadius: "8px",
+                        fontWeight: 500,
+                        border: "none",
+                        cursor:
+                          cancellingId === registration._id
+                            ? "not-allowed"
+                            : "pointer",
+                        background:
+                          cancellingId === registration._id
+                            ? "rgba(160,160,160,0.4)"
+                            : colors.error,
+                        color: "#FFFFFF",
+                        transition: "0.3s ease",
+                      }}
                     >
                       {cancellingId === registration._id
                         ? "Cancelling..."

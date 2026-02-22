@@ -19,25 +19,40 @@ const Promotion = () => {
   const [selectedEvent, setSelectedEvent] = useState('');
   const [emailList, setEmailList] = useState('');
   const [loading, setLoading] = useState(true);
-  const API_URL=import.meta.env.VITE_API_URL;
+
+  const API_URL = import.meta.env.VITE_API_URL;
   const BASE_URL =
     import.meta.env.VITE_FRONTEND_URL || window.location.origin;
 
+  // ===== THEME COLORS =====
+  const colors = {
+    bgDark: '#121212',
+    cardGradient: 'linear-gradient(135deg, #1E1E2F 0%, #2A2A3D 100%)',
+    glassBg: 'rgba(30,30,47,0.5)',
+    primaryGradient: 'linear-gradient(135deg, #00BFA6 0%, #1DE9B6 100%)',
+    iconGradient: 'linear-gradient(135deg, #00BFA6 0%, #FF6B6B 100%)',
+
+    textWhite: '#FFFFFF',
+    textLight: '#E0E0E0',
+    textMuted: '#A0A0A0',
+
+    borderSoft: 'rgba(255,255,255,0.08)',
+  };
+
   // =========================
-  // Fetch Real Events
+  // Fetch Events
   // =========================
   useEffect(() => {
     const fetchEvents = async () => {
       try {
         const response = await axios.get(`${API_URL}/api/events`);
-        const data=response?.data?.data || [];
+        const data = response?.data?.data || [];
         setEvents(data);
 
         if (data.length > 0) {
           setSelectedEvent(data[0]._id);
         }
       } catch (error) {
-        console.error('Error fetching events:', error);
         toast.error('Failed to load events');
       } finally {
         setLoading(false);
@@ -47,9 +62,6 @@ const Promotion = () => {
     fetchEvents();
   }, []);
 
-  // =========================
-  // Selected Event Data
-  // =========================
   const selectedEventData = useMemo(() => {
     return events.find((e) => e._id === selectedEvent);
   }, [selectedEvent, events]);
@@ -59,7 +71,7 @@ const Promotion = () => {
     : '';
 
   // =========================
-  // Social Share
+  // Share Logic
   // =========================
   const shareOnSocial = (platform) => {
     if (!selectedEventData) return;
@@ -91,19 +103,12 @@ const Promotion = () => {
     window.open(shareUrl, '_blank');
   };
 
-  // =========================
-  // Copy Link
-  // =========================
   const copyLink = () => {
     if (!eventLink) return;
-
     navigator.clipboard.writeText(eventLink);
     toast.success('Event link copied!');
   };
 
-  // =========================
-  // Email Invites (Frontend Validation)
-  // =========================
   const sendEmailInvites = (e) => {
     e.preventDefault();
 
@@ -121,27 +126,29 @@ const Promotion = () => {
       (email) => !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
     );
 
-    if (emails.length === 0) {
+    if (!emails.length) {
       toast.error('Please enter at least one email');
       return;
     }
 
-    if (invalidEmails.length > 0) {
+    if (invalidEmails.length) {
       toast.error('Some email addresses are invalid');
       return;
     }
 
-    // 🔥 Later connect to backend API
     toast.success(`Invitations prepared for ${emails.length} recipients!`);
     setEmailList('');
   };
 
   // =========================
-  // Loading / Empty States
+  // Loading States
   // =========================
   if (loading) {
     return (
-      <div className="text-white text-center pt-40">
+      <div
+        style={{ backgroundColor: colors.bgDark, color: colors.textWhite }}
+        className="text-center pt-40 min-h-screen"
+      >
         Loading events...
       </div>
     );
@@ -149,14 +156,20 @@ const Promotion = () => {
 
   if (!events.length) {
     return (
-      <div className="text-white text-center pt-40">
+      <div
+        style={{ backgroundColor: colors.bgDark, color: colors.textWhite }}
+        className="text-center pt-40 min-h-screen"
+      >
         No events available to promote.
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen pt-24 pb-20 px-4 sm:px-6 lg:px-8">
+    <div
+      style={{ backgroundColor: colors.bgDark }}
+      className="min-h-screen pt-24 pb-20 px-4 sm:px-6 lg:px-8"
+    >
       <div className="max-w-6xl mx-auto">
 
         {/* Header */}
@@ -165,29 +178,46 @@ const Promotion = () => {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-12"
         >
-          <h1 className="text-5xl md:text-6xl font-bold text-white mb-4">
+          <h1
+            style={{ color: colors.textWhite }}
+            className="text-5xl md:text-6xl font-bold mb-4"
+          >
             Promote Your Event
           </h1>
-          <p className="text-xl text-gray-300">
+          <p style={{ color: colors.textMuted }} className="text-xl">
             Boost visibility and increase registrations
           </p>
         </motion.div>
 
         {/* Event Selector */}
-        <div className="glass rounded-2xl p-6 mb-8">
-          <label className="block text-white font-semibold mb-4">
+        <div
+          style={{
+            background: colors.cardGradient,
+            border: `1px solid ${colors.borderSoft}`
+          }}
+          className="rounded-2xl p-6 mb-8"
+        >
+          <label
+            style={{ color: colors.textWhite }}
+            className="block font-semibold mb-4"
+          >
             Select Event
           </label>
           <select
             value={selectedEvent}
             onChange={(e) => setSelectedEvent(e.target.value)}
-            className="w-full bg-white/10 text-white border border-white/20 rounded-lg px-4 py-3"
+            style={{
+              backgroundColor: '#1E1E2F',
+              color: colors.textWhite,
+              border: `1px solid ${colors.borderSoft}`
+            }}
+            className="w-full rounded-lg px-4 py-3"
           >
             {events.map((event) => (
               <option
                 key={event._id}
                 value={event._id}
-                className="bg-slate-800"
+                style={{ backgroundColor: '#1E1E2F' }}
               >
                 {event.title}
               </option>
@@ -195,34 +225,54 @@ const Promotion = () => {
           </select>
         </div>
 
-        {/* Analytics (Placeholder for now) */}
+        {/* Analytics */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-          <div className="glass rounded-xl p-6 text-center">
-            <FaEye className="mx-auto text-primary-400 text-2xl mb-2" />
-            <h3 className="text-white text-xl font-bold">—</h3>
-            <p className="text-gray-400 text-sm">Event Views</p>
-          </div>
-
-          <div className="glass rounded-xl p-6 text-center">
-            <FaUsers className="mx-auto text-primary-400 text-2xl mb-2" />
-            <h3 className="text-white text-xl font-bold">—</h3>
-            <p className="text-gray-400 text-sm">Registrations</p>
-          </div>
-
-          <div className="glass rounded-xl p-6 text-center">
-            <FaChartLine className="mx-auto text-primary-400 text-2xl mb-2" />
-            <h3 className="text-white text-xl font-bold">—</h3>
-            <p className="text-gray-400 text-sm">Conversion Rate</p>
-          </div>
+          {[FaEye, FaUsers, FaChartLine].map((Icon, index) => (
+            <div
+              key={index}
+              style={{
+                background: colors.cardGradient,
+                border: `1px solid ${colors.borderSoft}`
+              }}
+              className="rounded-xl p-6 text-center"
+            >
+              <div
+                style={{
+                  background: colors.iconGradient,
+                  width: 50,
+                  height: 50,
+                  borderRadius: '50%',
+                  margin: '0 auto 12px auto',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+              >
+                <Icon color="#FFFFFF" />
+              </div>
+              <h3 style={{ color: colors.textWhite }} className="text-xl font-bold">—</h3>
+              <p style={{ color: colors.textMuted }} className="text-sm">
+                {index === 0 ? 'Event Views' : index === 1 ? 'Registrations' : 'Conversion Rate'}
+              </p>
+            </div>
+          ))}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
           {/* Social Share */}
-          <div className="glass rounded-2xl p-8">
+          <div
+            style={{
+              background: colors.cardGradient,
+              border: `1px solid ${colors.borderSoft}`
+            }}
+            className="rounded-2xl p-8"
+          >
             <div className="flex items-center mb-6">
-              <FaShare className="text-primary-400 text-2xl mr-3" />
-              <h2 className="text-2xl font-bold text-white">Social Media</h2>
+              <FaShare color="#1DE9B6" size={22} className="mr-3" />
+              <h2 style={{ color: colors.textWhite }} className="text-2xl font-bold">
+                Social Media
+              </h2>
             </div>
 
             <div className="space-y-4">
@@ -230,10 +280,14 @@ const Promotion = () => {
                 (platform) => (
                   <motion.button
                     key={platform}
-                    whileHover={{ scale: 1.02 }}
+                    whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => shareOnSocial(platform)}
-                    className="w-full bg-gradient-to-r from-primary-600 to-accent-600 text-white py-4 rounded-lg font-semibold"
+                    style={{
+                      background: colors.primaryGradient,
+                      color: '#FFFFFF'
+                    }}
+                    className="w-full py-4 rounded-lg font-semibold"
                   >
                     Share on {platform}
                   </motion.button>
@@ -242,13 +296,23 @@ const Promotion = () => {
             </div>
 
             {/* Copy Link */}
-            <div className="mt-6 p-4 bg-white/5 rounded-lg flex justify-between items-center">
-              <span className="text-gray-300 text-sm truncate mr-4">
+            <div
+              style={{
+                backgroundColor: colors.glassBg,
+                border: `1px solid ${colors.borderSoft}`
+              }}
+              className="mt-6 p-4 rounded-lg flex justify-between items-center"
+            >
+              <span style={{ color: colors.textLight }} className="text-sm truncate mr-4">
                 {eventLink}
               </span>
               <button
                 onClick={copyLink}
-                className="bg-primary-600 hover:bg-primary-700 px-4 py-2 rounded-lg text-white"
+                style={{
+                  background: colors.primaryGradient,
+                  color: '#FFFFFF'
+                }}
+                className="px-4 py-2 rounded-lg"
               >
                 Copy
               </button>
@@ -256,10 +320,18 @@ const Promotion = () => {
           </div>
 
           {/* Email Invites */}
-          <div className="glass rounded-2xl p-8">
+          <div
+            style={{
+              background: colors.cardGradient,
+              border: `1px solid ${colors.borderSoft}`
+            }}
+            className="rounded-2xl p-8"
+          >
             <div className="flex items-center mb-6">
-              <FaEnvelope className="text-primary-400 text-2xl mr-3" />
-              <h2 className="text-2xl font-bold text-white">Email Invites</h2>
+              <FaEnvelope color="#1DE9B6" size={22} className="mr-3" />
+              <h2 style={{ color: colors.textWhite }} className="text-2xl font-bold">
+                Email Invites
+              </h2>
             </div>
 
             <form onSubmit={sendEmailInvites} className="space-y-4">
@@ -268,26 +340,43 @@ const Promotion = () => {
                 onChange={(e) => setEmailList(e.target.value)}
                 placeholder="Enter comma separated emails"
                 rows="6"
-                className="w-full bg-white/10 text-white border border-white/20 rounded-lg px-4 py-3"
+                style={{
+                  backgroundColor: '#1E1E2F',
+                  color: colors.textWhite,
+                  border: `1px solid ${colors.borderSoft}`
+                }}
+                className="w-full rounded-lg px-4 py-3"
               />
 
               <motion.button
-                whileHover={{ scale: 1.02 }}
+                whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.98 }}
                 type="submit"
-                className="w-full btn-primary"
+                style={{
+                  background: colors.primaryGradient,
+                  color: '#FFFFFF'
+                }}
+                className="w-full rounded-lg px-6 py-3 font-semibold"
               >
                 Send Invitations
               </motion.button>
             </form>
 
             {selectedEventData && (
-              <div className="mt-6 p-4 bg-white/5 rounded-lg">
-                <p className="text-gray-400 text-sm mb-2">Email Preview</p>
-                <p className="text-white font-semibold text-sm">
+              <div
+                style={{
+                  backgroundColor: colors.glassBg,
+                  border: `1px solid ${colors.borderSoft}`
+                }}
+                className="mt-6 p-4 rounded-lg"
+              >
+                <p style={{ color: colors.textMuted }} className="text-sm mb-2">
+                  Email Preview
+                </p>
+                <p style={{ color: colors.textWhite }} className="font-semibold text-sm">
                   Subject: You're invited to {selectedEventData.title}!
                 </p>
-                <p className="text-gray-400 text-xs mt-2">
+                <p style={{ color: colors.textMuted }} className="text-xs mt-2">
                   Includes event details and direct registration link.
                 </p>
               </div>

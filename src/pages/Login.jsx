@@ -16,7 +16,6 @@ const Login = () => {
   const navigate = useNavigate();
   const { login, isAuthenticated, authLoading } = useAuth();
 
-  
   useEffect(() => {
     if (isAuthenticated) {
       navigate('/');
@@ -31,10 +30,9 @@ const Login = () => {
       setLoading(true);
       await login(formData.email, formData.password);
       toast.success('Logged in successfully!');
-      // 🚫 NO navigate here anymore
     } catch (error) {
       toast.error('Invalid credentials');
-      setLoading(false); // only reset on failure
+      setLoading(false);
     }
   };
 
@@ -42,15 +40,32 @@ const Login = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // Theme colors
+  const colors = {
+    bgDark: '#121212',
+    bgCard: '#1E1E2F',
+    bgGradientCard: 'linear-gradient(135deg, #1E1E2F 0%, #2A2A3D 100%)',
+    primaryGradient: 'linear-gradient(135deg, #00BFA6 0%, #1DE9B6 100%)',
+    secondaryGradient: 'linear-gradient(135deg, #00BFA6 0%, #FF6B6B 100%)',
+    textLight: '#E0E0E0',
+    textMuted: '#A0A0A0',
+    textWhite: '#FFFFFF',
+    borderInput: '#FFFFFF33',
+    placeholder: '#A0A0A0',
+  };
+
   return (
-    <div className="min-h-screen pt-20 pb-20 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
-      {/* Background */}
+    <div
+      style={{ minHeight: '100vh', backgroundColor: colors.bgDark }}
+      className="pt-20 pb-20 px-4 sm:px-6 lg:px-8 flex items-center justify-center relative"
+    >
+      {/* Background overlay image */}
       <div
-        className="fixed inset-0 z-0"
+        className="absolute inset-0 z-0"
         style={{
           backgroundImage:
             'url(https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=2070)',
-          backgroundSize: 'cover',
+          backgroundSize: 'contain',
           backgroundPosition: 'center',
           filter: 'brightness(0.3)',
         }}
@@ -61,29 +76,40 @@ const Login = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="glass rounded-3xl p-8 shadow-2xl"
+          style={{
+            background: colors.bgGradientCard,
+            backdropFilter: 'blur(10px)',
+          }}
+          className="rounded-3xl p-8 shadow-2xl"
         >
           {/* Logo */}
           <div className="text-center mb-8">
-            <div className="inline-block bg-gradient-to-r from-primary-500 to-accent-500 p-3 rounded-full mb-4">
+            <div
+              style={{ background: colors.primaryGradient }}
+              className="inline-block p-3 rounded-full mb-4"
+            >
               <FaUser className="text-white text-3xl" />
             </div>
-            <h2 className="text-3xl font-bold text-white font-montserrat">
+            <h2 style={{ color: colors.textWhite }} className="text-3xl font-bold font-montserrat">
               Welcome Back!
             </h2>
-            <p className="text-gray-300 mt-2">
+            <p style={{ color: colors.textMuted }} className="mt-2">
               Login to manage your events
             </p>
           </div>
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Email */}
             <div>
-              <label className="block text-white font-semibold mb-2">
+              <label style={{ color: colors.textWhite }} className="block font-semibold mb-2">
                 Email Address
               </label>
               <div className="relative">
-                <FaEnvelope className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <FaEnvelope
+                  className="absolute left-4 top-1/2 transform -translate-y-1/2"
+                  style={{ color: colors.textMuted }}
+                />
                 <input
                   type="email"
                   name="email"
@@ -92,17 +118,28 @@ const Login = () => {
                   required
                   disabled={loading || authLoading}
                   placeholder="Enter your email"
-                  className="w-full bg-white/10 text-white border border-white/20 rounded-lg pl-12 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500 placeholder-gray-400 disabled:opacity-60"
+                  style={{
+                    backgroundColor: '#FFFFFF1A', // white/10
+                    color: colors.textWhite,
+                    borderColor: colors.borderInput,
+                    paddingLeft: '3rem',
+                    paddingRight: '1rem',
+                  }}
+                  className="w-full rounded-lg py-3 focus:outline-none focus:ring-2 disabled:opacity-60"
                 />
               </div>
             </div>
 
+            {/* Password */}
             <div>
-              <label className="block text-white font-semibold mb-2">
+              <label style={{ color: colors.textWhite }} className="block font-semibold mb-2">
                 Password
               </label>
               <div className="relative">
-                <FaLock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <FaLock
+                  className="absolute left-4 top-1/2 transform -translate-y-1/2"
+                  style={{ color: colors.textMuted }}
+                />
                 <input
                   type="password"
                   name="password"
@@ -111,17 +148,29 @@ const Login = () => {
                   required
                   disabled={loading || authLoading}
                   placeholder="Enter your password"
-                  className="w-full bg-white/10 text-white border border-white/20 rounded-lg pl-12 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500 placeholder-gray-400 disabled:opacity-60"
+                  style={{
+                    backgroundColor: '#FFFFFF1A', // white/10
+                    color: colors.textWhite,
+                    borderColor: colors.borderInput,
+                    paddingLeft: '3rem',
+                    paddingRight: '1rem',
+                  }}
+                  className="w-full rounded-lg py-3 focus:outline-none focus:ring-2 disabled:opacity-60"
                 />
               </div>
             </div>
 
+            {/* Login Button */}
             <motion.button
               whileHover={!loading ? { scale: 1.02 } : {}}
               whileTap={!loading ? { scale: 0.98 } : {}}
               type="submit"
               disabled={loading || authLoading}
-              className="w-full btn-primary text-lg py-3 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+              style={{
+                background: colors.primaryGradient,
+                color: colors.textWhite,
+              }}
+              className="w-full text-lg py-3 flex items-center justify-center gap-2 rounded-lg disabled:opacity-70 disabled:cursor-not-allowed"
             >
               {(loading || authLoading) && (
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -130,12 +179,14 @@ const Login = () => {
             </motion.button>
           </form>
 
+          {/* Links */}
           <div className="mt-6 text-center">
-            <p className="text-gray-300">
+            <p style={{ color: colors.textMuted }}>
               Don't have an account?{' '}
               <Link
                 to="/register"
-                className="text-primary-400 hover:text-primary-300 font-semibold"
+                style={{ background: 'none', color: '#00BFA6' }}
+                className="font-semibold hover:opacity-80"
               >
                 Sign up
               </Link>
@@ -143,7 +194,7 @@ const Login = () => {
           </div>
 
           <div className="mt-4 text-center">
-            <Link to="/" className="text-gray-400 hover:text-white text-sm">
+            <Link to="/" style={{ color: colors.textMuted }} className="text-sm hover:opacity-80">
               ← Back to Home
             </Link>
           </div>

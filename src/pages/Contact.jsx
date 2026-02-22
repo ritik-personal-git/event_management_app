@@ -5,68 +5,106 @@ import toast from 'react-hot-toast';
 const Contact = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
-    toast.success('Message sent successfully! We\'ll get back to you soon.');
+    toast.success("Message sent successfully! We'll get back to you soon.");
     e.target.reset();
   };
 
+  const textWhite = '#FFFFFF';
+  const textLight = '#E0E0E0';
+  const textMuted = '#A0A0A0';
+  const bgCard = '#1E1E2F';
+  const bgGlass = 'linear-gradient(to bottom right, #1E1E2F, #2A2A3D, 0.5)'; // Glass effect
+  const primaryGradient = 'linear-gradient(to bottom right, #00BFA6, #1DE9B6)';
+
   return (
-    <div className="min-h-screen pt-24 pb-20 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
+    <div style={{ minHeight: '100vh', paddingTop: '96px', paddingBottom: '80px', paddingLeft: '16px', paddingRight: '16px', backgroundColor: '#121212' }}>
+      <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
+          style={{ textAlign: 'center', marginBottom: '48px' }}
         >
-          <h1 className="text-5xl md:text-6xl font-bold text-white mb-4 font-montserrat" data-aos="fade-up">
+          <h1 style={{ fontSize: '48px', fontWeight: '700', color: textWhite, marginBottom: '16px', fontFamily: 'Montserrat' }}>
             Get In Touch
           </h1>
-          <p className="text-xl text-gray-300 font-raleway" data-aos="fade-up" data-aos-delay="100">
+          <p style={{ fontSize: '20px', color: textLight, fontFamily: 'Raleway' }}>
             We'd love to hear from you. Send us a message!
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '48px', maxWidth: '100%', margin: '0 auto', 
+                      '@media(min-width:1024px)': { gridTemplateColumns: '1fr 1fr' } 
+                    }}>
           {/* Contact Form */}
-          <div className="glass rounded-2xl p-8" data-aos="fade-right">
-            <h2 className="text-2xl font-bold text-white mb-6 font-montserrat">Send us a Message</h2>
-            <form onSubmit={handleSubmit} className="space-y-6">
+          <div style={{ background: bgGlass, borderRadius: '24px', padding: '32px' }}>
+            <h2 style={{ fontSize: '24px', fontWeight: '700', color: textWhite, marginBottom: '24px', fontFamily: 'Montserrat' }}>Send us a Message</h2>
+            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
               <div>
-                <label className="block text-white font-semibold mb-2">Your Name</label>
+                <label style={{ display: 'block', color: textWhite, fontWeight: '600', marginBottom: '8px' }}>Your Name</label>
                 <input
                   type="text"
                   required
                   placeholder="John Doe"
-                  className="w-full bg-white/10 text-white border border-white/20 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  style={{
+                    width: '100%',
+                    backgroundColor: 'rgba(255,255,255,0.1)',
+                    color: textWhite,
+                    border: '1px solid rgba(255,255,255,0.2)',
+                    borderRadius: '12px',
+                    padding: '12px 16px',
+                    outline: 'none',
+                  }}
                 />
               </div>
-
               <div>
-                <label className="block text-white font-semibold mb-2">Email Address</label>
+                <label style={{ display: 'block', color: textWhite, fontWeight: '600', marginBottom: '8px' }}>Email Address</label>
                 <input
                   type="email"
                   required
                   placeholder="john@example.com"
-                  className="w-full bg-white/10 text-white border border-white/20 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  style={{
+                    width: '100%',
+                    backgroundColor: 'rgba(255,255,255,0.1)',
+                    color: textWhite,
+                    border: '1px solid rgba(255,255,255,0.2)',
+                    borderRadius: '12px',
+                    padding: '12px 16px',
+                    outline: 'none',
+                  }}
                 />
               </div>
-
               <div>
-                <label className="block text-white font-semibold mb-2">Subject</label>
+                <label style={{ display: 'block', color: textWhite, fontWeight: '600', marginBottom: '8px' }}>Subject</label>
                 <input
                   type="text"
                   required
                   placeholder="How can we help?"
-                  className="w-full bg-white/10 text-white border border-white/20 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  style={{
+                    width: '100%',
+                    backgroundColor: 'rgba(255,255,255,0.1)',
+                    color: textWhite,
+                    border: '1px solid rgba(255,255,255,0.2)',
+                    borderRadius: '12px',
+                    padding: '12px 16px',
+                    outline: 'none',
+                  }}
                 />
               </div>
-
               <div>
-                <label className="block text-white font-semibold mb-2">Message</label>
+                <label style={{ display: 'block', color: textWhite, fontWeight: '600', marginBottom: '8px' }}>Message</label>
                 <textarea
                   required
                   rows="5"
                   placeholder="Tell us more about your inquiry..."
-                  className="w-full bg-white/10 text-white border border-white/20 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  style={{
+                    width: '100%',
+                    backgroundColor: 'rgba(255,255,255,0.1)',
+                    color: textWhite,
+                    border: '1px solid rgba(255,255,255,0.2)',
+                    borderRadius: '12px',
+                    padding: '12px 16px',
+                    outline: 'none',
+                  }}
                 />
               </div>
 
@@ -74,102 +112,87 @@ const Contact = () => {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 type="submit"
-                className="w-full btn-primary"
+                style={{
+                  width: '100%',
+                  background: primaryGradient,
+                  color: textWhite,
+                  padding: '12px 0',
+                  borderRadius: '12px',
+                  fontWeight: '600',
+                  fontSize: '18px',
+                  cursor: 'pointer',
+                  border: 'none',
+                }}
               >
                 Send Message
               </motion.button>
             </form>
           </div>
 
-          {/* Contact Information */}
-          <div className="space-y-8" data-aos="fade-left">
+          {/* Contact Info + Socials */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
             {/* Contact Details */}
-            <div className="glass rounded-2xl p-8">
-              <h2 className="text-2xl font-bold text-white mb-6 font-montserrat">Contact Information</h2>
-              <div className="space-y-6">
-                <div className="flex items-start space-x-4">
-                  <div className="bg-gradient-to-br from-primary-600 to-accent-600 p-3 rounded-lg">
-                    <FaMapMarkerAlt className="text-white text-xl" />
+            <div style={{ background: bgGlass, borderRadius: '24px', padding: '32px' }}>
+              <h2 style={{ fontSize: '24px', fontWeight: '700', color: textWhite, marginBottom: '24px', fontFamily: 'Montserrat' }}>Contact Information</h2>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                <div style={{ display: 'flex', gap: '16px', alignItems: 'start' }}>
+                  <div style={{ background: primaryGradient, padding: '12px', borderRadius: '12px' }}>
+                    <FaMapMarkerAlt style={{ color: textWhite, fontSize: '20px' }} />
                   </div>
                   <div>
-                    <h3 className="text-white font-semibold mb-1">Address</h3>
-                    <p className="text-gray-300">Mithibai College<br />Vile Parle<br />Mumbai</p>
+                    <h3 style={{ color: textWhite, fontWeight: '600', marginBottom: '4px' }}>Address</h3>
+                    <p style={{ color: textMuted }}>Mithibai College<br />Vile Parle<br />Mumbai</p>
                   </div>
                 </div>
-
-                <div className="flex items-start space-x-4">
-                  <div className="bg-gradient-to-br from-primary-600 to-accent-600 p-3 rounded-lg">
-                    <FaEnvelope className="text-white text-xl" />
+                <div style={{ display: 'flex', gap: '16px', alignItems: 'start' }}>
+                  <div style={{ background: primaryGradient, padding: '12px', borderRadius: '12px' }}>
+                    <FaEnvelope style={{ color: textWhite, fontSize: '20px' }} />
                   </div>
                   <div>
-                    <h3 className="text-white font-semibold mb-1">Email</h3>
-                    <a href="mailto:mahabriarman@gmail.com" className="text-primary-400 hover:text-primary-300">
-                      mahabriarman@gmail.com
-                    </a>
-                    <br />
-                    <a href="mailto:mahabriarman+support@gmail.com" className="text-primary-400 hover:text-primary-300">
-                      mahabriarman+support@gmail.com
-                    </a>
+                    <h3 style={{ color: textWhite, fontWeight: '600', marginBottom: '4px' }}>Email</h3>
+                    <a href="mailto:mahabriarman@gmail.com" style={{ color: '#00BFA6' }}>mahabriarman@gmail.com</a><br/>
+                    <a href="mailto:mahabriarman+support@gmail.com" style={{ color: '#00BFA6' }}>mahabriarman+support@gmail.com</a>
                   </div>
                 </div>
-
-                <div className="flex items-start space-x-4">
-                  <div className="bg-gradient-to-br from-primary-600 to-accent-600 p-3 rounded-lg">
-                    <FaPhone className="text-white text-xl" />
+                <div style={{ display: 'flex', gap: '16px', alignItems: 'start' }}>
+                  <div style={{ background: primaryGradient, padding: '12px', borderRadius: '12px' }}>
+                    <FaPhone style={{ color: textWhite, fontSize: '20px' }} />
                   </div>
                   <div>
-                    <h3 className="text-white font-semibold mb-1">Phone</h3>
-                    <a href="tel:+919876543210" className="text-primary-400 hover:text-primary-300">
-                    🤫+91 9529873656
-                    </a>
-                    <br />
-                    <a href="tel:+919876543211" className="text-primary-400 hover:text-primary-300">
-                    🤫+91 9529873656
-                    </a>
+                    <h3 style={{ color: textWhite, fontWeight: '600', marginBottom: '4px' }}>Phone</h3>
+                    <a href="tel:+919529873656" style={{ color: '#00BFA6' }}>+91 9529873656</a><br/>
+                    <a href="tel:+919529873657" style={{ color: '#00BFA6' }}>+91 9529873657</a>
                   </div>
                 </div>
               </div>
 
-              {/* Social Media */}
-              <div className="mt-8 pt-8 border-t border-white/20">
-                <h3 className="text-white font-semibold mb-4">Follow Us</h3>
-                <div className="flex space-x-4">
-                  <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" 
-                     className="bg-white/10 p-3 rounded-lg hover:bg-blue-600 transition-colors">
-                    <FaFacebook className="text-white text-xl" />
-                  </a>
-                  <a href="https://twitter.com" target="_blank" rel="noopener noreferrer"
-                     className="bg-white/10 p-3 rounded-lg hover:bg-sky-500 transition-colors">
-                    <FaTwitter className="text-white text-xl" />
-                  </a>
-                  <a href="https://instagram.com" target="_blank" rel="noopener noreferrer"
-                     className="bg-white/10 p-3 rounded-lg hover:bg-pink-600 transition-colors">
-                    <FaInstagram className="text-white text-xl" />
-                  </a>
-                  <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer"
-                     className="bg-white/10 p-3 rounded-lg hover:bg-blue-700 transition-colors">
-                    <FaLinkedin className="text-white text-xl" />
-                  </a>
+              {/* Socials */}
+              <div style={{ marginTop: '32px', paddingTop: '32px', borderTop: '1px solid rgba(255,255,255,0.2)' }}>
+                <h3 style={{ color: textWhite, fontWeight: '600', marginBottom: '16px' }}>Follow Us</h3>
+                <div style={{ display: 'flex', gap: '16px' }}>
+                  <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" style={{ backgroundColor: 'rgba(255,255,255,0.1)', padding: '12px', borderRadius: '12px' }}><FaFacebook style={{ color: textWhite, fontSize: '20px' }} /></a>
+                  <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" style={{ backgroundColor: 'rgba(255,255,255,0.1)', padding: '12px', borderRadius: '12px' }}><FaTwitter style={{ color: textWhite, fontSize: '20px' }} /></a>
+                  <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" style={{ backgroundColor: 'rgba(255,255,255,0.1)', padding: '12px', borderRadius: '12px' }}><FaInstagram style={{ color: textWhite, fontSize: '20px' }} /></a>
+                  <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" style={{ backgroundColor: 'rgba(255,255,255,0.1)', padding: '12px', borderRadius: '12px' }}><FaLinkedin style={{ color: textWhite, fontSize: '20px' }} /></a>
                 </div>
               </div>
             </div>
 
-            {/* Google Maps Embed */}
-            <div className="glass rounded-2xl p-2 overflow-hidden">
-            
+            {/* Google Map */}
+            <div style={{ background: bgGlass, borderRadius: '24px', overflow: 'hidden' }}>
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3770.108528382179!2d72.8348553751888!3d19.10289425112767!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7c856a7d54355%3A0xd8481ebbaccd8149!2sMithibai%20College%20of%20Arts%2C%20Chauhan%20Institute%20of%20Science%20and%20Amrutben%20Jivanlal%20College%20of%20Commerce%20and%20Economics!5e0!3m2!1sen!2sin!4v1771138795368!5m2!1sen!2sin"
                 width="100%"
                 height="300"
                 style={{ border: 0, borderRadius: '12px' }}
-                allowFullScreen=""
+                allowFullScreen
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
               />
             </div>
 
-            {/* Animation */}
-            <div className="text-center">
+            {/* Lottie Animation */}
+            <div style={{ textAlign: 'center', marginTop: '24px' }}>
               <lottie-player
                 src="https://assets3.lottiefiles.com/packages/lf20_u25cckyh.json"
                 background="transparent"
